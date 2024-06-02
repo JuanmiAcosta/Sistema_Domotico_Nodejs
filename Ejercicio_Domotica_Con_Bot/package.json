@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.6.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "start": "concurrently \"node server-domotica.js\" \"node agente.js\""
+  }
+}

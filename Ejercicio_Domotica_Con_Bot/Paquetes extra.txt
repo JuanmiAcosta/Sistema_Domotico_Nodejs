@@ -1,0 +1,19 @@
+socket.io-client: Este paquete es el cliente de Socket.IO, que permite establecer
+conexiones de socket en tiempo real entre el cliente y el servidor.
+Se utiliza en el lado del cliente para conectarse a un servidor Socket.IO 
+y escuchar y emitir eventos.
+
+concurrently: Este paquete es una herramienta que se utiliza para ejecutar múltiples 
+comandos npm simultáneamente. Es útil en situaciones en las que necesitas ejecutar 
+varios scripts de Node.js al mismo tiempo, como un servidor y un cliente, o en tu 
+caso, un servidor y un agente.
+
+//-------------------------------------------------------------------------------
+
+Para el bot de Telegram : 
+
+- Telegraf
+
+- Dotenv ( variables de entorno -> API Key )
+
+Nombre del bot : Bot_Sistema_Domótico_NodeJs

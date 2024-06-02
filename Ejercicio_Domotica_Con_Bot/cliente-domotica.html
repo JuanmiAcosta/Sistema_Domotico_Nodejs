@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/b9c8f9a610.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+    <style>
+        .chakra-petch-bold {
+            font-family: "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .on {
+            color: green;
+        }
+
+        .off {
+            color: red;
+        }
+
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #4A54CA;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #4A54CA;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+    <title>Cliente domótica</title>
+</head>
+
+<body>
+
+    <div class="flex flex-col justify-center items-center text-center mt-5">
+
+        <h2 class="text-3xl font-bold p-4 bg-indigo-300 w-5/6 m-5">Sensores de la casa</h2>
+
+        <div class="flex flex-wrap flex-row justify-center items-center text-center">
+
+            <div class="flex flex-col justify-center items-center m-5 bg-gray-200 w-80 h-200 p-10">
+                <div class="border-3 border-black rounded-full p-2"><i style="font-size:30px;"
+                        class="fa-solid fa-temperature-three-quarters"></i></div>
+                <div class="flex flex-row justify-center items-center">
+                    <h1 class="text-xl font-bold mt-2">Temperatura: </h1>
+                    <p id="actualTemperatura" class="text-lg chakra-petch-bold text-2xl mt-2 ml-2 bg-indigo-300 p-2">25
+                    </p>
+                    <p class="text-lg chakra-petch-bold text-2xl mt-2 p-2"> ºC</p>
+                </div>
+                <input id="temperatura" class="text-lg mt-4 chakra-petch-bold mb-2 pl-3"
+                    placeholder="25 ..."></input>
+            </div>
+
+            <div class="flex flex-col justify-center items-center m-5 bg-gray-200 w-80 h-200 p-10">
+                <div class="border-3 border-black rounded-full p-2"><i style="font-size:30px;"
+                        class="fa-solid fa-lightbulb"></i></div>
+                <div class="flex flex-row justify-center items-center">
+                    <h1 class="text-xl font-bold mt-2">Luz: </h1>
+                    <p id="actualLuminosidad" class="text-lg chakra-petch-bold text-2xl mt-2 ml-2 bg-indigo-300 p-2">200
+                    </p>
+                    <p class="text-lg chakra-petch-bold text-2xl mt-2 p-2"> Lúmenes</p>
+                </div>
+                <input id="luminosidad" class="text-lg mt-4 chakra-petch-bold mb-2 pl-3"
+                    placeholder="200 ..."></input>
+            </div>
+
+            <div class="flex flex-col justify-center items-center m-5 bg-gray-200 w-80 h-200 p-10">
+                <div class="border-3 border-black rounded-full p-2"><i style="font-size:30px;"
+                        class="fa-solid fa-wind"></i></div>
+                <div class="flex flex-row justify-center items-center">
+                    <h1 class="text-xl font-bold mt-2">Viento: </h1>
+                    <p id="actualViento" class="text-lg chakra-petch-bold text-2xl mt-2 ml-2 bg-indigo-300 p-2">20</p>
+                    <p class="text-lg chakra-petch-bold text-2xl mt-2 p-2"> m/s</p>
+                </div>
+                <input id="viento" class="text-lg mt-4 chakra-petch-bold mb-2 pl-3"
+                    placeholder="20 ..."></input>
+            </div>
+
+        </div>
+
+        <button id="mandarDatos-btn"
+            class="bg-indigo-300 hover:bg-indigo-700 hover:scale-125 text-white text-lg font-bold py-2 px-4 rounded-full m-3 ease-in-out duration-300">Mandar
+            datos</button>
+
+        <h2 class="text-3xl font-bold p-4 bg-indigo-300 w-5/6 m-5">Actuadores de la casa</h2>
+
+        <div class="flex flex-wrap flex-row justify-center items-center text-center">
+
+            <div class="flex flex-col justify-center items-center m-5 bg-gray-200 w-80 p-10">
+                <div class="border-3 border-black rounded-full p-2"><i id="simboloAC" style="font-size:30px;"
+                        class="fa-solid fa-fan"></i>
+                </div>
+                <h1 class="text-xl font-bold mt-2"> A/C </h1>
+                <p id="sensorAC" class="text-lg mt-2 chakra-petch-bold text-2xl off">Encendido</p>
+
+                <label class="switch mt-3">
+                    <input id="manualAC" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="flex flex-col justify-center items-center m-5 bg-gray-200 w-80 p-10">
+                <div class="border-3 border-black rounded-full p-2"><i id="simboloPersiana"
+                        style="font-size:30px; --fa-animation-duration: 4s;" class="fa-regular fa-window-maximize"></i>
+                </div>
+                <h1 class="text-xl font-bold mt-2"> Persiana </h1>
+                <p id="sensorPersiana" class="text-lg mt-2 chakra-petch-bold text-2xl off">Apagado</p>
+
+                <label class="switch mt-3">
+                    <input id="manualPersiana" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="flex flex-col justify-center items-center m-5 bg-gray-200 w-80 p-10">
+                <div class="border-3 border-black rounded-full p-2"><i id="simboloToldo"
+                        style="font-size:30px;  --fa-animation-duration: 4s;"
+                        class="fa-solid fa-tent-arrow-left-right"></i></div>
+                <h1 class="text-xl font-bold mt-2"> Toldo </h1>
+                <p id="sensorToldo" class="text-lg mt-2 chakra-petch-bold text-2xl off">Apagado</p>
+
+                <label class="switch mt-3">
+                    <input id="manualToldo" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+        </div>
+
+        <div class="flex flex-row">
+
+            <div id="alertaAC" class="hidden bg-red-500 text-white p-3 rounded-full m-5 text-xl">
+                <i style="font-size:30px;" class="fa-solid fa-circle-exclamation fa-beat-fade mr-3"></i>
+                Temperatura extrema
+                <i style="font-size:30px;" class="fa-solid fa-circle-exclamation fa-beat-fade ml-3"></i>
+            </div>
+
+            <div id="alertaPersiana" class="hidden bg-yellow-500 text-white p-3 rounded-full m-5 text-xl">
+                <i style="font-size:30px;" class="fa-solid fa-circle-exclamation fa-beat-fade mr-3"></i>
+                Demasiada iluminación
+                <i style="font-size:30px;" class="fa-solid fa-circle-exclamation fa-beat-fade ml-3"></i>
+            </div>
+
+            <div id="alertaToldo" class="hidden bg-blue-500 text-white p-3 rounded-full m-5 text-xl">
+                <i style="font-size:30px;" class="fa-solid fa-circle-exclamation fa-beat-fade mr-3"></i>
+                Viento torrencial
+                <i style="font-size:30px;" class="fa-solid fa-circle-exclamation fa-beat-fade ml-3"></i>
+            </div>
+
+        </div>
+
+        <h2 class="text-3xl font-bold p-4 bg-indigo-300 w-5/6 m-5"> Ajuste de umbrales </h2>
+
+        <div class="flex flex-col justify-center items-start m-5 bg-gray-200 p-10">
+
+            <h3 class="text-lg font-bold mt-2">Temperatura máxima (ºC): </h3>
+            <div class="m-3 flex flex-row justify-center items-center"> 
+                <span class="flex flex-row gap-3 justify-center font-bold mr-3 bg-violet-700 text-white p-4 rounded-full w-30"> Actual: <p id="maxTemperatura"> 30 </p> </span>
+                <input id="maxTemperatura-input" class="text-lg chakra-petch-bold bg-white p-2 w-20"></input>
+                <button id="cambiarMaxTemp" class="bg-indigo-300 hover:bg-indigo-700 hover:scale-110 text-white text-lg font-bold py-2 px-4 rounded-full ml-4 ease-in-out duration-300"><i class=" text-xl fa-regular fa-paper-plane"></i></button>
+            </div>
+
+            <h3 class="text-lg font-bold mt-2">Temperatura apagado (ºC): </h3>
+            <div class="m-3 flex flex-row justify-center items-center"> 
+                <span class="flex flex-row gap-3 justify-center font-bold mr-3 bg-violet-700 text-white p-4 rounded-full w-30"> Actual: <p id="minTemperatura"> 20 </p> </span>
+                <input id="minTemperatura-input" class="text-lg chakra-petch-bold bg-white p-2 w-20"></input>
+                <button id="cambiarMinTemp" class="bg-indigo-300 hover:bg-indigo-700 hover:scale-110 text-white text-lg font-bold py-2 px-4 rounded-full ml-4 ease-in-out duration-300"><i class=" text-xl fa-regular fa-paper-plane"></i></button>
+            </div>
+
+            <h3 class="text-lg font-bold mt-2">Luz máx (Lúmenes): </h3>
+            <div class="m-3 flex flex-row justify-center items-center">
+                <span class="flex flex-row gap-3 justify-center font-bold mr-3 bg-violet-700 text-white p-4 rounded-full w-30"> Actual: <p id="maxLuz"> 10000 </p> </span>
+                <input id="maxLuz-input" class="text-lg chakra-petch-bold bg-white p-2 w-20"></input>
+                <button id="cambiarMaxLuz" class="bg-indigo-300 hover:bg-indigo-700 hover:scale-110 text-white text-lg font-bold py-2 px-4 rounded-full ml-4 ease-in-out duration-300"><i class=" text-xl fa-regular fa-paper-plane"></i></button>
+            </div>
+
+            <h3 class="text-lg font-bold mt-2">Viento máx (m/s): </h3>
+            <div class="m-3 flex flex-row justify-center items-center">
+                <span class="flex flex-row gap-3 justify-center font-bold mr-3 bg-violet-700 text-white p-4 rounded-full w-30"> Actual: <p id="maxViento"> 20 </p> </span>
+                <input id="maxViento-input" class="text-lg chakra-petch-bold bg-white p-2 w-20"></input>
+                <button id="cambiarMaxViento" class="bg-indigo-300 hover:bg-indigo-700 hover:scale-110 text-white text-lg font-bold py-2 px-4 rounded-full ml-4 ease-in-out duration-300"><i class=" text-xl fa-regular fa-paper-plane"></i></button>
+            </div>
+            
+        </div>
+
+        <h2 class="text-3xl font-bold p-4 bg-indigo-300 w-5/6 m-5">Eventos recientes</h2>
+
+        <table class="text-2xl border-separate border-spacing-2 shadow-2xl w-5/6 m-5 mb-10">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th class="w-1/2 border-4 border-gray-800 font-bold p-4 text-white text-center bg-violet-700">Evento
+                    </th>
+                    <th class="w-1/2 border-4 border-gray-800 font-bold p-4 text-white text-center bg-violet-700">Fecha
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script type="text/javascript">
+
+    const estilosFila = ['p-4', 'text-center', 'text-black'];
+
+    var socket = io.connect(document.URL);
+
+    const btn = document.getElementById("mandarDatos-btn");
+
+    const manualAC = document.getElementById("manualAC");
+    const manualPersiana = document.getElementById("manualPersiana");
+    const manualToldo = document.getElementById("manualToldo");
+
+    const cambiarMaxTemp = document.getElementById("cambiarMaxTemp");
+    const cambiarMinTemp = document.getElementById("cambiarMinTemp");
+    const cambiarMaxLuz = document.getElementById("cambiarMaxLuz");
+    const cambiarMaxViento = document.getElementById("cambiarMaxViento");
+
+    btn.addEventListener("click", mandarDatos);
+
+    manualAC.addEventListener("change", function () {
+        event.preventDefault();
+        console.log("Cambiando estado A/C");
+        mandarDatosManual("AC");
+    });
+
+    manualPersiana.addEventListener("change", function () {
+        event.preventDefault();
+        console.log("Cambiando estado Persiana");
+        mandarDatosManual("Persiana");
+    });
+
+    manualToldo.addEventListener("change", function () {
+        event.preventDefault();
+        console.log("Cambiando estado Toldo");
+        mandarDatosManual("Toldo");
+    });
+
+    cambiarMaxTemp.addEventListener("click", function () {
+        event.preventDefault();
+        console.log("Cambiando temperatura máxima");
+        var maxTemp = document.getElementById("maxTemperatura-input").value;
+        socket.emit('cambiarMaxTemp', {temp:maxTemp});
+    });
+
+    cambiarMinTemp.addEventListener("click", function () {
+        event.preventDefault();
+        console.log("Cambiando temperatura mínima");
+        var minTemp = document.getElementById("minTemperatura-input").value;
+        socket.emit('cambiarMinTemp', {temp:minTemp});
+    });
+
+    cambiarMaxLuz.addEventListener("click", function () {
+        event.preventDefault();
+        console.log("Cambiando luz máxima");
+        var maxLuz = document.getElementById("maxLuz-input").value;
+        socket.emit('cambiarMaxLuz', {luz:maxLuz});
+    });
+
+    cambiarMaxViento.addEventListener("click", function () {
+        event.preventDefault();
+        console.log("Cambiando viento máximo");
+        var maxViento = document.getElementById("maxViento-input").value;
+        socket.emit('cambiarMaxViento', {viento:maxViento});
+    });
+    
+
+    function actualizaActuadores(datos) {  //Actualiza el estado de los actuadores. También se encarga de las alertas
+
+        document.getElementById("sensorAC").innerHTML = datos.estadoAC;
+        document.getElementById("sensorPersiana").innerHTML = datos.estadoPersiana;
+        document.getElementById("sensorToldo").innerHTML = datos.estadoToldo;
+
+        if (datos.estadoAC == "Encendido") { //Añadir clases si no las tienen
+            if(!datos.manual) document.getElementById("alertaAC").classList.remove("hidden");
+            document.getElementById("simboloAC").classList.add("fa-spin");
+            document.getElementById("sensorAC").classList.add("on");
+            document.getElementById("sensorAC").classList.remove("off");
+            document.getElementById("manualAC").checked = true;
+        } else {
+            if(!datos.manual) document.getElementById("alertaAC").classList.add("hidden");
+            document.getElementById("simboloAC").classList.remove("fa-spin");
+            document.getElementById("sensorAC").classList.add("off");
+            document.getElementById("sensorAC").classList.remove("on");
+            document.getElementById("manualAC").checked = false;
+        }
+
+        if (datos.estadoPersiana == "Encendido") {
+            if(!datos.manual) document.getElementById("alertaPersiana").classList.remove("hidden");
+            document.getElementById("simboloPersiana").classList.add("fa-flip");
+            document.getElementById("sensorPersiana").classList.add("on");
+            document.getElementById("sensorPersiana").classList.remove("off");
+            document.getElementById("manualPersiana").checked = true;
+        } else {
+            if(!datos.manual) document.getElementById("alertaPersiana").classList.add("hidden");
+            document.getElementById("simboloPersiana").classList.remove("fa-flip");
+            document.getElementById("sensorPersiana").classList.add("off");
+            document.getElementById("sensorPersiana").classList.remove("on");
+            document.getElementById("manualPersiana").checked = false;
+        }
+
+        if (datos.estadoToldo == "Encendido") {
+            if(!datos.manual) document.getElementById("alertaToldo").classList.add("hidden");
+            document.getElementById("simboloToldo").classList.add("fa-bounce");
+            document.getElementById("sensorToldo").classList.remove("off");
+            document.getElementById("sensorToldo").classList.add("on");
+            document.getElementById("manualToldo").checked = true;
+        } else {
+            if(!datos.manual) document.getElementById("alertaToldo").classList.remove("hidden");
+            document.getElementById("simboloToldo").classList.remove("fa-bounce");
+            document.getElementById("sensorToldo").classList.remove("on");
+            document.getElementById("sensorToldo").classList.add("off");
+            document.getElementById("manualToldo").checked = false;
+        }
+    }
+
+    function actualizarSensores(datos) { //Actualiza los sensores de la casa
+
+        if (datos.temperatura === undefined) {
+            document.getElementById("actualTemperatura").innerHTML = "-";
+        }else{
+            document.getElementById("actualTemperatura").innerHTML = datos.temperatura;
+        }
+       
+        if (datos.luminosidad === undefined) {
+            document.getElementById("actualLuminosidad").innerHTML = "-";
+        }else{
+            document.getElementById("actualLuminosidad").innerHTML = datos.luminosidad;
+        }
+
+        if (datos.viento === undefined) {
+            document.getElementById("actualViento").innerHTML = "-";
+        }else{
+            document.getElementById("actualViento").innerHTML = datos.viento;
+        }
+    }
+
+    function mandarDatosManual(actuadorCambiado){
+
+        console.log("Mandando datos por activación manual");
+
+        var temperatura = document.getElementById("actualTemperatura").innerHTML;
+        var luminosidad = document.getElementById("actualLuminosidad").innerHTML;
+        var viento = document.getElementById("actualViento").innerHTML;
+
+        console.log("Temperatura -> " + temperatura + ", Luminosidad -> " + luminosidad + ", Viento -> " + viento);
+
+        var estadoAC = document.getElementById("sensorAC").innerHTML;
+        if (actuadorCambiado == "AC") {
+            estadoAC = estadoAC == "Encendido" ? "Apagado" : "Encendido";
+        }
+        var estadoPersiana = document.getElementById("sensorPersiana").innerHTML;
+        if (actuadorCambiado == "Persiana") {
+            estadoPersiana = estadoPersiana == "Encendido" ? "Apagado" : "Encendido";
+        }
+        var estadoToldo = document.getElementById("sensorToldo").innerHTML;
+        if (actuadorCambiado == "Toldo") {
+            estadoToldo = estadoToldo == "Encendido" ? "Apagado" : "Encendido";
+        }
+
+        var fecha = new Date();
+
+        socket.emit('insertarDatosSinAgente', {
+            temperatura: temperatura, luminosidad: luminosidad, viento: viento,
+            fecha: fecha, estadoAC: estadoAC, estadoPersiana: estadoPersiana, estadoToldo: estadoToldo
+        });
+
+        actualizaActuadores({estadoAC: estadoAC, estadoPersiana: estadoPersiana, estadoToldo: estadoToldo, manual:true});
+    }
+
+
+    function mandarDatos() { //Manda los datos al servidor
+
+        console.log("Mandando datos");
+
+        var temperatura = document.getElementById("temperatura").value;
+        var luminosidad = document.getElementById("luminosidad").value;
+        var viento = document.getElementById("viento").value;
+        var fecha = new Date();
+
+        var estadoAC = document.getElementById("sensorAC").innerHTML;
+        var estadoPersiana = document.getElementById("sensorPersiana").innerHTML;
+        var estadoToldo = document.getElementById("sensorToldo").innerHTML;
+
+        socket.emit('insertarDatos', {
+            temperatura: temperatura, luminosidad: luminosidad, viento: viento,
+            fecha: fecha, estadoAC: estadoAC, estadoPersiana: estadoPersiana, estadoToldo: estadoToldo
+        });
+    }
+
+    socket.on('actualizarUmbrales', (data) => {
+        document.getElementById("maxTemperatura").innerHTML = data.temperaturaMax;
+        document.getElementById("minTemperatura").innerHTML = data.temperaturaMin;
+        document.getElementById("maxLuz").innerHTML = data.luzMax;
+        document.getElementById("maxViento").innerHTML = data.vientoMax;
+    });
+
+    socket.on('actualizarClienteEntrante', function (datos) {
+        console.log("Actualizando cliente con datos: Temperatura -> " + datos.temperatura +
+            ", Luminosidad -> " + datos.luminosidad + ", Viento -> " + datos.viento + ";");
+        actualizarSensores(datos);
+        datos.manual = true;
+        actualizaActuadores(datos);
+    });
+
+    socket.on('actualizarSensores', function (datos) {
+        console.log("Actualizando cliente con datos: Temperatura -> " + datos.temperatura +
+            ", Luminosidad -> " + datos.luminosidad + ", Viento -> " + datos.viento + ";");
+        actualizarSensores(datos);
+    });
+
+    socket.on('actualizarActuadores', function (datos) {
+        console.log("Actualizando datos actuadores -> " + JSON.stringify(datos));
+        actualizaActuadores(datos);
+    });
+
+    socket.on('actualizarEventos', function (datos) {
+        console.log("Actualizando eventos -> " + JSON.stringify(datos));
+        var tabla = document.querySelector('table tbody');
+        tabla.innerHTML = '';
+        datos.forEach(evento => {
+            var fila = document.createElement('tr');
+            var celda1 = document.createElement('td');
+            var celda2 = document.createElement('td');
+            celda1.classList.add(...estilosFila);
+            celda2.classList.add(...estilosFila);
+            celda1.innerHTML = evento.evento;
+            var fecha = new Date(evento.fecha);
+            fecha = fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear() + " " + fecha.getHours() + ":" + fecha.getMinutes().toString().padStart(2, '0');;
+            celda2.innerHTML = fecha;
+            fila.appendChild(celda1);
+            fila.appendChild(celda2);
+            tabla.appendChild(fila);
+        });
+    });
+
+</script>
+
+</html>
